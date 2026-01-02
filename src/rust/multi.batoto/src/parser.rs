@@ -20,7 +20,8 @@ pub fn parse_listing(html: &Node, result: &mut Vec<Manga>) {
 			.read()
 			.replace("/series/", "");
 		let title = obj.select(".item-title").text().read();
-		// FIX: Remplacement de //k par //n pour les images
+		
+		// FIX: Remplacement de //k par //n pour les images de couverture (liste)
 		let img = obj.select(".item-cover img").attr("src").read().replace("//k", "//n");
 
 		result.push(Manga {
@@ -42,7 +43,8 @@ pub fn parse_search(html: &Node, result: &mut Vec<Manga>) {
 			.read()
 			.replace("/series/", "");
 		let title = obj.select(".item-title").text().read();
-		// FIX: Remplacement de //k par //n pour les images
+		
+		// FIX: Remplacement de //k par //n pour les images de recherche
 		let img = obj.select("img").attr("src").read().replace("//k", "//n");
 
 		if !id.is_empty() && !title.is_empty() && !img.is_empty() {
@@ -58,7 +60,8 @@ pub fn parse_search(html: &Node, result: &mut Vec<Manga>) {
 
 pub fn parse_manga(obj: Node, id: String) -> Result<Manga> {
 	let title = obj.select(".item-title").text().read();
-	// FIX: Remplacement de //k par //n pour les images
+	
+	// FIX: Remplacement de //k par //n pour l'image de couverture principale
 	let cover = obj.select(".shadow-6").attr("src").read().replace("//k", "//n");
 	let description = obj.select(".limit-html").text().read();
 
@@ -243,8 +246,10 @@ pub fn get_page_list(obj: Node) -> Result<Vec<Page>> {
 
 		for (index, item) in img_arr.iter().enumerate() {
 			let ind = index as i32;
-			// FIX: Remplacement de //k par //n pour les images des chapitres
+			
+			// FIX MAJEUR: Remplacement de //k par //n pour les pages du chapitre
 			let url = format!("{}", item).replace("//k", "//n");
+			
 			pages.push(Page {
 				index: ind,
 				url,
